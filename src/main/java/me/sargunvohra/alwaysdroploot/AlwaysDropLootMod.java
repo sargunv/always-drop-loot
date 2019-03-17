@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Mod(modid = AlwaysDropLootMod.MOD_ID, useMetadata = true)
+@Mod(modid = AlwaysDropLootMod.MOD_ID, useMetadata = true, acceptableRemoteVersions = "*")
 public class AlwaysDropLootMod {
   static final String MOD_ID = "@MOD_ID@";
 
@@ -23,7 +23,7 @@ public class AlwaysDropLootMod {
   @SubscribeEvent
   void onLivingDeath(LivingDeathEvent event) {
     Entity entity = event.getEntity();
-    if (entity instanceof EntityLivingBase) {
+    if (!entity.world.isRemote && entity instanceof EntityLivingBase) {
       EntityLivingBase entityLivingBase = ((EntityLivingBase) entity);
       if (entityLivingBase.recentlyHit <= 0) {
         entityLivingBase.recentlyHit = 100;
