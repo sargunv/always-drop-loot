@@ -15,7 +15,7 @@ Check out this mod on [CurseForge][].
 ```bash
 git clone https://github.com/sargunv/always-drop-loot.git
 cd always-drop-loot
-./gradlew setupDecompWorkspace build runClient
+./gradlew check build runClient
 # On Windows, use "gradlew.bat" instead of "gradlew"
 ```
 
