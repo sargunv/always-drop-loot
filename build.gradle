@@ -1,115 +1,70 @@
 buildscript {
     repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
-        maven { url = "https://files.minecraftforge.net/maven" }
+        mavenCentral()
     }
     dependencies {
-        classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: vForgeGradle
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
 
 plugins {
     id "com.palantir.git-version" version "0.11.0"
-    id "com.diffplug.gradle.spotless" version "3.16.0"
+    id 'com.github.sherter.google-java-format' version '0.8'
+    id 'de.fuerstenau.buildconfig' version '1.1.8'
 }
 
-apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'idea'
 
-version = "$vMinecraft-${gitVersion()}"
-group = "$modNamespace"
-archivesBaseName = "$modId"
+version = "$mcVersion-${gitVersion()}"
+group = "me.sargunvohra.${modId}"
+archivesBaseName = modId
 
-configurations {
-    mods
-}
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
-repositories {
-    jcenter()
-    maven { url = "http://dl.tsr.me/artifactory/libs-release/" }
+minecraft {
+    mappings channel: 'snapshot', version: '20180921-1.13'
+    accessTransformer = file("build/resources/main/META-INF/accesstransformer.cfg")
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+        }
+    }
 }
 
 dependencies {
-    mods "com.fireball1725.devworld:devworld:$vDevWorld"
-}
-
-sourceMainJava.source = sourceSets.main.allSource
-sourceCompatibility = targetCompatibility = "1.8"
-compileJava { sourceCompatibility = targetCompatibility = "1.8" }
-
-minecraft {
-    version = "$vMinecraft-$vForge"
-    runDir = "run"
-    mappings = "$vMcpMappings"
-    useDepAts = true
-    replace "@MOD_ID@", modId
-    replaceIn "AlwaysDropLootMod.java"
-}
-
-runClient {
-    args = ["--username", runClientPlayerName]
-    outputs.upToDateWhen { false }
+    minecraft "net.minecraftforge:forge:${mcVersion}-${forgeVersion}"
 }
 
 processResources {
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+    inputs.property "modVersion", project.version
+    inputs.property "mcVersion", project.properties.mcVersion
+    inputs.property "forgeVersion", project.properties.forgeVersion
+    inputs.property "modId", project.properties.modId
 
-    from(sourceSets.main.resources.srcDirs) {
-        include "mcmod.info"
-        expand(
-                "modid": modId,
-                "version": project.version,
-                "mcversion": project.minecraft.version
-        )
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "mcmod.info"
-    }
-
-    rename '(.+_at.cfg)', 'META-INF/$1'
+    expand (
+            modId: modId,
+            modVersion: project.version,
+            mcVersion: mcVersion,
+            forgeMajorVersion: forgeVersion.takeWhile { it != '.' },
+    )
 }
-
-jar {
-    manifest {
-        attributes "FMLAT": "${modId}_at.cfg"
-    }
-}
-
-spotless {
-    format 'misc', {
-        target(
-                "**/*.md",
-                "**/*.gitignore",
-                "**/*.json",
-                "**/*.info",
-                "**/*.lang",
-                "**/*.properties"
-        )
-
-        trimTrailingWhitespace()
-        indentWithSpaces(2)
-        endWithNewline()
-    }
-    java {
-        googleJavaFormat()
-        licenseHeader '/* Licensed under Apache-2.0 */'
-        importOrder 'java', 'javax', 'net.minecraft', 'net.minecraftforge', ''
-        removeUnusedImports()
-    }
-}
-
-//noinspection GroovyAssignabilityCheck
-task installMods(type: Copy, dependsOn: "deinstallMods") {
-    from { configurations.mods }
-    include "**/*.jar"
-    into file(minecraft.runDir + "/mods")
-}
-
-//noinspection GroovyAssignabilityCheck
-task deinstallMods(type: Delete) {
-    delete fileTree(dir: minecraft.runDir + "/mods", include: "*.jar")
-}
-
-tasks.setupDecompWorkspace.dependsOn installMods
-tasks.setupDevWorkspace.dependsOn installMods

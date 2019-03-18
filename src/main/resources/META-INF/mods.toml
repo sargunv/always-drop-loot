@@ -1,0 +1,30 @@
+modLoader="javafml"
+loaderVersion="[${forgeMajorVersion},)"
+issueTrackerURL="https://github.com/sargunv/always-drop-loot/issues"
+
+[[mods]]
+modId="${modId}"
+version="${modVersion}"
+displayName="Always Drop Loot"
+#updateJSONURL=""
+displayURL="https://minecraft.curseforge.com/projects/always-drop-loot"
+#logoFile=""
+credits=""
+authors="Sargun Vohra"
+description='''
+Make mobs always drop exp and loot, regardless of cause of death.
+'''
+
+[[dependencies.alwaysdroploot]]
+    modId="forge"
+    mandatory=true
+    versionRange="[${forgeMajorVersion},)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.alwaysdroploot]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[${mcVersion}]"
+    ordering="NONE"
+    side="BOTH"
