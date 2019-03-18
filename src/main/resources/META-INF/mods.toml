@@ -15,14 +15,14 @@ description='''
 Make mobs always drop exp and loot, regardless of cause of death.
 '''
 
-[[dependencies.${modid}]]
+[["dependencies.${modId}"]]
     modId="forge"
     mandatory=true
     versionRange="[${forgeMajorVersion},)"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.${modid}]]
+[["dependencies.${modId}"]]
     modId="minecraft"
     mandatory=true
     versionRange="[${mcVersion}]"
