@@ -1,6 +1,7 @@
 modLoader="javafml"
 loaderVersion="[${forgeMajorVersion},)"
 issueTrackerURL="https://github.com/sargunv/always-drop-loot/issues"
+logoFile="alwaysdroploot_logo.png"
 
 [[mods]]
 modId="${modId}"
@@ -8,7 +9,6 @@ version="${modVersion}"
 displayName="Always Drop Loot"
 #updateJSONURL=""
 displayURL="https://minecraft.curseforge.com/projects/always-drop-loot"
-#logoFile=""
 credits=""
 authors="Sargun Vohra"
 description='''
