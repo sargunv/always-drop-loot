@@ -1,7 +1,3 @@
-[![Downloads](http://cf.way2muchnoise.eu/always-drop-loot.svg)][CurseForge]
-[![CurseForge](http://cf.way2muchnoise.eu/versions/always-drop-loot.svg)][CurseForge]
-[![CircleCI](https://circleci.com/gh/sargunv/always-drop-loot.svg?style=shield)][CircleCI]
-
 # Always Drop Loot
 
 Make mobs always drop exp and loot, regardless of cause of death.
