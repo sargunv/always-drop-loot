@@ -1,88 +1,76 @@
-buildscript {
-    repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
-    }
-}
-
 plugins {
-    id "com.palantir.git-version" version "0.11.0"
-    id 'com.github.sherter.google-java-format' version '0.8'
-    id 'de.fuerstenau.buildconfig' version '1.1.8'
+	id 'fabric-loom' version '0.2.0-SNAPSHOT'
+	id 'maven-publish'
+	id "com.palantir.git-version" version "0.11.0"
+	id 'com.github.sherter.google-java-format' version '0.8'
 }
 
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'idea'
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
-version = "$mcVersion-${gitVersion()}"
-group = "me.sargunvohra.${modId}"
-archivesBaseName = modId
-
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+archivesBaseName = project.archives_base_name
+version = "${minecraft_version}-${gitVersion()}"
+group = project.maven_group
 
 minecraft {
-    mappings channel: 'snapshot', version: "${mappingsVersion}-${mcVersion}".toString()
-    accessTransformer = file("src/main/resources/META-INF/accesstransformer.cfg")
-
-    runs {
-        client {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-        }
-
-        server {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-        }
-    }
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${mcVersion}-${forgeVersion}"
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}"
+	modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
+	modCompile "net.fabricmc:fabric:${project.fabric_version}"
 }
 
 processResources {
-    inputs.property "modVersion", project.version
-    inputs.property "mcVersion", project.properties.mcVersion
-    inputs.property "forgeVersion", project.properties.forgeVersion
-    inputs.property "modId", project.properties.modId
+	inputs.property "version", project.version
 
-    eachFile { file ->
-        if (file.name.endsWith('.toml') || file.name.endsWith('.mcmeta')) {
-            file.expand(
-                    modId: modId,
-                    modVersion: project.version,
-                    mcVersion: mcVersion,
-                    forgeMajorVersion: forgeVersion.takeWhile { it != '.' },
-            )
-        }
-    }
+	from(sourceSets.main.resources.srcDirs) {
+		include "fabric.mod.json"
+		expand "version": project.version
+	}
+
+	from(sourceSets.main.resources.srcDirs) {
+		exclude "fabric.mod.json"
+	}
+}
+
+// ensure that the encoding is set to UTF-8, no matter what the system default is
+// this fixes some edge cases with special characters not displaying correctly
+// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+tasks.withType(JavaCompile) {
+	options.encoding = "UTF-8"
+}
+
+// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+// if it is present.
+// If you remove this task, sources will not be generated.
+task sourcesJar(type: Jar, dependsOn: classes) {
+	classifier = "sources"
+	from sourceSets.main.allSource
 }
 
 jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : modId,
-                "Specification-Vendor"    : project.group,
-                "Specification-Version"   : "1.0",
-                "Implementation-Title"    : modId,
-                "Implementation-Version"  : project.version,
-                "Implementation-Vendor"   : project.group,
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-        ],)
-    }
+	from "LICENSE"
+}
+
+// configure the maven publication
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			// add all the jars that should be included when publishing to maven
+			artifact(jar) {
+				builtBy remapJar
+			}
+			artifact(sourcesJar) {
+				builtBy remapSourcesJar
+			}
+		}
+	}
+
+	// select the repositories you want to publish to
+	repositories {
+		// uncomment to publish to the local maven
+		// mavenLocal()
+	}
 }

@@ -1,0 +1,19 @@
+{
+    "id": "alwaysdroploot",
+    "version": "${version}",
+    "name": "Always Drop Loot",
+    "description": "Make mobs always drop exp and loot, regardless of cause of death.",
+    "authors": [
+        "sargunv"
+    ],
+    "license": "Apache-2.0",
+    "icon": "assets/alwaysdroploot/icon.png",
+    "side": "universal",
+    "initializers": [],
+    "requires": {
+        "fabric": "*"
+    },
+    "mixins": {
+        "common": "alwaysdroploot.common.json"
+    }
+}
