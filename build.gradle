@@ -86,3 +86,7 @@ jar {
         ],)
     }
 }
+
+googleJavaFormat {
+    exclude '.gradle'
+}
