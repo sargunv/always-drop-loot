@@ -3,13 +3,13 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: circleci/jdk8:0.1.1
     steps:
       - checkout
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "build.gradle" }}
-      - run: ./gradlew check build
+      - run: ./gradlew check build --stacktrace
       - store_artifacts:
           path: build/libs
           destination: jars
