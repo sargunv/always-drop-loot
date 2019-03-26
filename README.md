@@ -16,4 +16,3 @@ cd always-drop-loot
 ```
 
 [CurseForge]: https://minecraft.curseforge.com/projects/always-drop-loot
-[CircleCI]: (https://circleci.com/gh/sargunv/always-drop-loot)
