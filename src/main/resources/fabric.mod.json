@@ -9,7 +9,9 @@
     "license": "Apache-2.0",
     "icon": "assets/alwaysdroploot/icon.png",
     "side": "universal",
-    "initializers": [],
+    "initializers": [
+        "me.sargunvohra.mcmods.alwaysdroploot.AlwaysDropLoot"
+    ],
     "requires": {
         "fabric": "*"
     },

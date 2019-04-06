@@ -1,6 +1,6 @@
 {
     "required": true,
-    "package": "me.sargunvohra.mcmods.alwaysdroploot",
+    "package": "me.sargunvohra.mcmods.alwaysdroploot.mixin",
     "compatibilityLevel": "JAVA_8",
     "mixins": [
         "KilledByPlayerLootConditionMixin",
