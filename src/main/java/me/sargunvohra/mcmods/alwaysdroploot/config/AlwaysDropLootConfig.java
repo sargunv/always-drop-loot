@@ -3,6 +3,7 @@ package me.sargunvohra.mcmods.alwaysdroploot.config;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+@SuppressWarnings("WeakerAccess")
 @Data
 @RequiredArgsConstructor
 public class AlwaysDropLootConfig {

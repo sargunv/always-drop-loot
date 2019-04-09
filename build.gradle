@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.2.0-SNAPSHOT'
+    id 'fabric-loom' version '0.2.1-SNAPSHOT'
     id 'maven-publish'
     id "com.palantir.git-version" version "0.11.0"
     id 'com.github.sherter.google-java-format' version '0.8'
@@ -22,10 +22,13 @@ repositories {
 dependencies {
     compileOnly "org.projectlombok:lombok:${project.lombok_version}"
     annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
+
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}"
     modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
+
     modCompile "net.fabricmc:fabric:${project.fabric_version}"
+    include "net.fabricmc:fabric:${project.fabric_version}"
 }
 
 processResources {
