@@ -7,19 +7,20 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 public class AlwaysDropLootConfig {
-  private final boolean alwaysDropXp;
-  private final LootDropMode lootDropMode;
+    private final boolean alwaysDropXp;
+    private final LootDropMode lootDropMode;
 
-  AlwaysDropLootConfig() {
-    this(false, LootDropMode.VANILLA);
-  }
+    AlwaysDropLootConfig() {
+        this(false, LootDropMode.VANILLA);
+    }
 
-  void validate() {}
+    void validate() {
+    }
 
-  public enum LootDropMode {
-    VANILLA,
-    VANILLA_INVERSE,
-    ALWAYS_AS_PLAYER,
-    NEVER_AS_PLAYER,
-  }
+    public enum LootDropMode {
+        VANILLA,
+        VANILLA_INVERSE,
+        ALWAYS_AS_PLAYER,
+        NEVER_AS_PLAYER,
+    }
 }

@@ -6,8 +6,8 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.resource.ResourceType;
 
 public class AlwaysDropLoot implements ModInitializer {
-  @Override
-  public void onInitialize() {
-    ResourceManagerHelper.get(ResourceType.DATA).registerReloadListener(ReloadListener.INSTANCE);
-  }
+    @Override
+    public void onInitialize() {
+        ResourceManagerHelper.get(ResourceType.DATA).registerReloadListener(ReloadListener.INSTANCE);
+    }
 }

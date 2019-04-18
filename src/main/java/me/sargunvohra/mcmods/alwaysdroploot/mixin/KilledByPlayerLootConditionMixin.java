@@ -10,20 +10,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(KilledByPlayerLootCondition.class)
 public class KilledByPlayerLootConditionMixin {
 
-  @Inject(at = @At("RETURN"), method = "method_938", cancellable = true)
-  private void alwaysKilledByPlayer(CallbackInfoReturnable<Boolean> cir) {
-    switch (ReloadListener.INSTANCE.getConfig().getLootDropMode()) {
-      case VANILLA:
-        break;
-      case VANILLA_INVERSE:
-        cir.setReturnValue(!cir.getReturnValue());
-        break;
-      case ALWAYS_AS_PLAYER:
-        cir.setReturnValue(true);
-        break;
-      case NEVER_AS_PLAYER:
-        cir.setReturnValue(false);
-        break;
+    @Inject(at = @At("RETURN"), method = "method_938", cancellable = true)
+    private void alwaysKilledByPlayer(CallbackInfoReturnable<Boolean> cir) {
+        switch (ReloadListener.INSTANCE.getConfig().getLootDropMode()) {
+            case VANILLA:
+                break;
+            case VANILLA_INVERSE:
+                cir.setReturnValue(!cir.getReturnValue());
+                break;
+            case ALWAYS_AS_PLAYER:
+                cir.setReturnValue(true);
+                break;
+            case NEVER_AS_PLAYER:
+                cir.setReturnValue(false);
+                break;
+        }
     }
-  }
 }

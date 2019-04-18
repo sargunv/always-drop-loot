@@ -2,14 +2,13 @@ plugins {
     id 'fabric-loom' version '0.2.1-SNAPSHOT'
     id 'maven-publish'
     id "com.palantir.git-version" version "0.11.0"
-    id 'com.github.sherter.google-java-format' version '0.8'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
-version = "${minecraft_version}-${gitVersion()}"
+version = "${gitVersion()}+mc${project.minecraft_normalized_version}"
 group = project.maven_group
 
 minecraft {
@@ -36,7 +35,7 @@ processResources {
 
     from(sourceSets.main.resources.srcDirs) {
         include "fabric.mod.json"
-        expand "version": project.version
+        filter {line -> line.replace("%VERSION%", "${project.version}")}
     }
 
     from(sourceSets.main.resources.srcDirs) {
@@ -82,8 +81,4 @@ publishing {
         // uncomment to publish to the local maven
         // mavenLocal()
     }
-}
-
-googleJavaFormat {
-    exclude '.gradle'
 }

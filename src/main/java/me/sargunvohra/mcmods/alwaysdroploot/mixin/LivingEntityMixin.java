@@ -10,10 +10,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
 
-  @Inject(at = @At("RETURN"), method = "shouldAlwaysDropXp", cancellable = true)
-  private void alwaysDropXp(CallbackInfoReturnable<Boolean> cir) {
-    if (ReloadListener.INSTANCE.getConfig().isAlwaysDropXp()) {
-      cir.setReturnValue(true);
+    @Inject(at = @At("RETURN"), method = "shouldAlwaysDropXp", cancellable = true)
+    private void alwaysDropXp(CallbackInfoReturnable<Boolean> cir) {
+        if (ReloadListener.INSTANCE.getConfig().isAlwaysDropXp()) {
+            cir.setReturnValue(true);
+        }
     }
-  }
 }
