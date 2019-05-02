@@ -12,7 +12,7 @@ public class KilledByPlayerLootConditionMixin {
 
     @Inject(at = @At("RETURN"), method = "method_938", cancellable = true)
     private void alwaysKilledByPlayer(CallbackInfoReturnable<Boolean> cir) {
-        switch (ReloadListener.INSTANCE.getConfig().getLootDropMode()) {
+        switch (ReloadListener.INSTANCE.getConfig().lootDropMode) {
             case VANILLA:
                 break;
             case VANILLA_INVERSE:

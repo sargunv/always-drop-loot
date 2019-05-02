@@ -1,9 +1,8 @@
 package me.sargunvohra.mcmods.alwaysdroploot.config;
 
 import com.google.gson.Gson;
-import lombok.Getter;
-import lombok.var;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +14,6 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
 
     public static ReloadListener INSTANCE = new ReloadListener();
 
-    @Getter
     private AlwaysDropLootConfig config = new AlwaysDropLootConfig();
 
     private ReloadListener() {
@@ -29,9 +27,9 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
     @Override
     public void apply(ResourceManager resourceManager) {
         try {
-            var res = resourceManager
+            Resource res = resourceManager
                 .getResource(new Identifier("alwaysdroploot", "alwaysdroploot/config.json"));
-            var config = new Gson()
+            AlwaysDropLootConfig config = new Gson()
                 .fromJson(new InputStreamReader(res.getInputStream()), AlwaysDropLootConfig.class);
             config.validate();
             LogManager.getLogger().info("Loaded {}", config);
@@ -39,5 +37,9 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public AlwaysDropLootConfig getConfig() {
+        return config;
     }
 }

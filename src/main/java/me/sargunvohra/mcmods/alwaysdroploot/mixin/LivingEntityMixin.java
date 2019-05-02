@@ -12,7 +12,7 @@ public class LivingEntityMixin {
 
     @Inject(at = @At("RETURN"), method = "shouldAlwaysDropXp", cancellable = true)
     private void alwaysDropXp(CallbackInfoReturnable<Boolean> cir) {
-        if (ReloadListener.INSTANCE.getConfig().isAlwaysDropXp()) {
+        if (ReloadListener.INSTANCE.getConfig().alwaysDropXp) {
             cir.setReturnValue(true);
         }
     }
