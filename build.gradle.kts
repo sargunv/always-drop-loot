@@ -55,8 +55,11 @@ dependencies {
     mappings("net.fabricmc:yarn:$minecraftVersion+$yarnMappings")
     modCompile("net.fabricmc:fabric-loader:$loaderVersion")
 
-    modCompile("net.fabricmc:fabric:$fabricVersion")
-    include("net.fabricmc:fabric:$fabricVersion")
+    modCompile("net.fabricmc.fabric-api:fabric-api-base:$fabricVersion")
+    include("net.fabricmc.fabric-api:fabric-api-base:$fabricVersion")
+
+    modCompile("net.fabricmc.fabric-api:fabric-resource-loader:$fabricVersion")
+    include("net.fabricmc.fabric-api:fabric-resource-loader:$fabricVersion")
 }
 
 val processResources = tasks.getByName<ProcessResources>("processResources") {
