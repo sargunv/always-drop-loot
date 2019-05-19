@@ -1,2 +1,1 @@
-* Rebuild on MC 1.14.1
-* Use modular fabric API
+unbundle fabric api

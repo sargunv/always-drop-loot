@@ -6,21 +6,16 @@ import net.fabricmc.loom.task.RemapJar
 import net.fabricmc.loom.task.RemapSourcesJar
 
 val minecraftVersion: String by project
-val yarnMappings: String by project
-val loaderVersion: String by project
-
 val curseProjectId: String by project
 val curseMinecraftVersion: String by project
 val modJarBaseName: String by project
 val modMavenGroup: String by project
 
-val fabricVersion: String by project
-
 plugins {
     java
     idea
     `maven-publish`
-    id("fabric-loom") version "0.2.1-SNAPSHOT"
+    id("fabric-loom") version "0.2.2-SNAPSHOT"
     id("com.palantir.git-version") version "0.11.0"
     id("com.matthewprenger.cursegradle") version "1.2.0"
 }
@@ -50,16 +45,19 @@ group = modMavenGroup
 minecraft {
 }
 
+configurations {
+    listOf(mappings, modCompile, include).forEach {
+        it {
+            resolutionStrategy.activateDependencyLocking()
+        }
+    }
+}
+
 dependencies {
     minecraft("com.mojang:minecraft:$minecraftVersion")
-    mappings("net.fabricmc:yarn:$minecraftVersion+$yarnMappings")
-    modCompile("net.fabricmc:fabric-loader:$loaderVersion")
-
-    modCompile("net.fabricmc.fabric-api:fabric-api-base:$fabricVersion")
-    include("net.fabricmc.fabric-api:fabric-api-base:$fabricVersion")
-
-    modCompile("net.fabricmc.fabric-api:fabric-resource-loader:$fabricVersion")
-    include("net.fabricmc.fabric-api:fabric-resource-loader:$fabricVersion")
+    mappings("net.fabricmc:yarn:$minecraftVersion+")
+    modCompile("net.fabricmc:fabric-loader:0.4.+")
+    modCompile("net.fabricmc.fabric-api:fabric-api:0.3.+")
 }
 
 val processResources = tasks.getByName<ProcessResources>("processResources") {
@@ -98,7 +96,7 @@ if (versionDetails().isCleanTag) {
             releaseType = "release"
             addGameVersion(curseMinecraftVersion)
             relations(closureOf<CurseRelation>{
-                embeddedLibrary("fabric")
+                requiredDependency("fabric")
             })
         })
 

@@ -26,6 +26,6 @@
     ],
     "requires": {
         "fabricloader": ">=0.4.0",
-        "fabric": "*"
+        "fabric": ">=0.3.0"
     }
 }
