@@ -57,6 +57,8 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:0.8.2+build.194")
 
     modImplementation("net.fabricmc.fabric-api:fabric-api:0.5.1+build.294-1.15")
+
+    modRuntime("io.github.prospector:modmenu:1.10.2+build.32")
 }
 
 val processResources = tasks.getByName<ProcessResources>("processResources") {
