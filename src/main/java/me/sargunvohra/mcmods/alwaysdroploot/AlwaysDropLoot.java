@@ -1,15 +1,25 @@
 package me.sargunvohra.mcmods.alwaysdroploot;
 
-import me.sargunvohra.mcmods.alwaysdroploot.config.ReloadListener;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.minecraft.resource.ResourceType;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
+import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
+import net.minecraft.world.level.GameRules;
 
-@SuppressWarnings("unused")
 public class AlwaysDropLoot implements ModInitializer {
-    @Override
-    public void onInitialize() {
-        ResourceManagerHelper.get(ResourceType.SERVER_DATA)
-            .registerReloadListener(ReloadListener.INSTANCE);
-    }
+
+  public static final GameRules.Key<GameRules.BooleanValue> ALWAYS_DROP_XP = GameRuleRegistry.register(
+    "always-drop-loot:alwaysDropXp",
+    GameRules.Category.DROPS,
+    GameRuleFactory.createBooleanRule(true)
+  );
+
+  public static final GameRules.Key<EnumRule<LootDropMode>> LOOT_DROP_MODE = GameRuleRegistry.register(
+    "always-drop-loot:lootDropMode",
+    GameRules.Category.DROPS,
+    GameRuleFactory.createEnumRule(LootDropMode.ALWAYS_AS_PLAYER)
+  );
+
+  @Override
+  public void onInitialize() {}
 }

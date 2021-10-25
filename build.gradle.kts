@@ -1,114 +1,144 @@
-import com.matthewprenger.cursegradle.CurseProject
-import com.matthewprenger.cursegradle.CurseRelation
-import com.matthewprenger.cursegradle.Options
 import com.palantir.gradle.gitversion.VersionDetails
-import net.fabricmc.loom.task.RemapJarTask
 
 val minecraftVersion: String by project
-val curseProjectId: String by project
-val curseMinecraftVersion: String by project
-val modJarBaseName: String by project
-val modMavenGroup: String by project
+val parchmentVersion: String by project
+val loaderVersion: String by project
+val modId: String by project
+val mavenGroup: String by project
+val fabricVersion: String by project
+val modMenuVersion: String by project
 
 plugins {
-    java
-    idea
-    `maven-publish`
-    id("fabric-loom") version "0.2.7-SNAPSHOT"
-    id("com.palantir.git-version") version "0.12.3"
-    id("com.matthewprenger.cursegradle") version "1.4.0"
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
-
-base {
-    archivesBaseName = modJarBaseName
-}
-
-repositories {
-    mavenCentral()
-    jcenter()
-    maven(url = "http://maven.fabricmc.net")
+  java
+  `maven-publish`
+  id("fabric-loom") version "0.10.42"
+  id("com.palantir.git-version") version "0.12.3"
+  id("com.diffplug.spotless") version "5.17.0"
+  id("org.jetbrains.changelog") version "1.3.1"
 }
 
 val gitVersion: groovy.lang.Closure<Any> by extra
 val versionDetails: groovy.lang.Closure<VersionDetails> by extra
 
 version = "${gitVersion()}+mc$minecraftVersion"
-group = modMavenGroup
+group = mavenGroup
 
-minecraft {
+sourceSets {
+  create("testmod") {
+    compileClasspath += main.get().compileClasspath
+    runtimeClasspath += main.get().runtimeClasspath
+  }
 }
 
-configurations {
-    listOf(mappings, modCompile, include).forEach {
-        it {
-            resolutionStrategy.activateDependencyLocking()
-        }
+loom {
+  runs {
+    create("testmodClient") {
+      client()
+      name("Testmod Client")
+      ideConfigGenerated(true)
+      source(sourceSets.getByName("testmod"))
     }
+    create("gametest") {
+      server()
+      name("Game Test")
+      ideConfigGenerated(true)
+      source(sourceSets.getByName("testmod"))
+      vmArg("-Dfabric-api.gametest")
+      runDir("build/gametest")
+    }
+  }
+}
+
+tasks.getByName("test").dependsOn("runGametest")
+
+repositories {
+  // Loom adds the essential maven repositories automatically.
+  maven(url = "https://maven.terraformersmc.com/")
+  maven(url = "https://maven.parchmentmc.net/")
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:$minecraftVersion")
-    mappings("net.fabricmc:yarn:$minecraftVersion+build.14:v2")
-    modImplementation("net.fabricmc:fabric-loader:0.8.2+build.194")
+  minecraft("com.mojang:minecraft:$minecraftVersion")
+  mappings(
+      loom.layered {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-$minecraftVersion:$parchmentVersion@zip")
+      })
 
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.5.1+build.294-1.15")
+  this.add("testmodImplementation", sourceSets.main.get().output)
 
-    modRuntime("io.github.prospector:modmenu:1.10.2+build.32")
+  // remember to update the dependency list in fabric.mod.json
+  // and the expansions in "processResources" below
+  modImplementation("net.fabricmc:fabric-loader:$loaderVersion")
+  modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
+
+  modRuntimeOnly("com.terraformersmc:modmenu:$modMenuVersion")
 }
 
-val processResources = tasks.getByName<ProcessResources>("processResources") {
-    inputs.property("version", project.version)
+base { archivesName.set(modId) }
 
-    filesMatching("fabric.mod.json") {
-        filter { line -> line.replace("%VERSION%", "${project.version}") }
+java {
+  toolchain.languageVersion.set(JavaLanguageVersion.of(16))
+  withSourcesJar()
+}
+
+tasks.getByName<ProcessResources>("processResources") {
+  filteringCharset = "UTF-8"
+
+  inputs.property("modVersion", project.version)
+  inputs.property("minecraftVersion", minecraftVersion)
+  inputs.property("loaderVersion", loaderVersion)
+  inputs.property("fabricVersion", fabricVersion)
+
+  filesMatching("fabric.mod.json") {
+    expand(
+        mapOf(
+            "modVersion" to project.version,
+            "minecraftVersion" to minecraftVersion,
+            "loaderVersion" to loaderVersion,
+            "fabricVersion" to fabricVersion,
+        ))
+  }
+}
+
+val javaCompile = tasks.withType<JavaCompile> { options.encoding = "UTF-8" }
+
+val jar = tasks.getByName<Jar>("jar") { from("LICENSE") }
+
+publishing {
+  publications {
+    create<MavenPublication>("mavenJava") {
+      artifact("remapJar") { builtBy(tasks.getByName("remapJar")) }
+      artifact("sourcesJar") { builtBy(tasks.getByName("remapSourcesJar")) }
     }
+  }
+  repositories {
+    // Add repositories to publish to here.
+  }
 }
-
-val javaCompile = tasks.withType<JavaCompile> {
-    options.encoding = "UTF-8"
-}
-
-val sourcesJar by tasks.registering(Jar::class) {
-    archiveClassifier.set("sources")
-    from(sourceSets.main.get().allSource)
-}
-
-val jar = tasks.getByName<Jar>("jar") {
-    from("LICENSE")
-}
-
-val remapJar = tasks.getByName<RemapJarTask>("remapJar")
 
 if (versionDetails().isCleanTag) {
+  // insert release configs here
+  println("clean tag (todo)")
+}
 
-    curseforge {
-        if (project.hasProperty("curseforge_api_key")) {
-            apiKey = project.property("curseforge_api_key")!!
-        }
+spotless {
+  java {
+    importOrder()
+    prettier(mapOf("prettier" to "2.4.1", "prettier-plugin-java" to "1.5.0"))
+  }
 
-        project(closureOf<CurseProject> {
-            id = curseProjectId
-            changelog = file("changelog.txt")
-            releaseType = "release"
-            addGameVersion(curseMinecraftVersion)
-            addGameVersion("Fabric")
-            relations(closureOf<CurseRelation> {
-                requiredDependency("fabric-api")
-            })
-            mainArtifact(file("${project.buildDir}/libs/${base.archivesBaseName}-$version.jar"))
-            afterEvaluate {
-                mainArtifact(remapJar)
-                uploadTask.dependsOn(remapJar)
-            }
-        })
+  kotlinGradle { ktfmt() }
 
-        options(closureOf<Options> {
-            forgeGradleIntegration = false
-        })
-    }
+  format("prettier") {
+    target("**/*.json", "**/*.yml", "**/*.md")
+    prettier("2.4.1")
+  }
+}
+
+changelog {
+  version.set("${gitVersion()}")
+  groups.set(listOf("Changes"))
+  unreleasedTerm.set("Current")
+  header.set(version.get())
 }

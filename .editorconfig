@@ -4,7 +4,6 @@ root = true
 charset = utf-8
 insert_final_newline = true
 
-[*.{java,json}]
+[*.{java,json,kts,yml}]
 indent_style = space
-max_line_length = 100
-indent_size = 4
+indent_size = 2

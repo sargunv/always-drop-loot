@@ -11,8 +11,8 @@ Check out this mod on [CurseForge][].
 ```bash
 git clone https://github.com/sargunv/always-drop-loot.git
 cd always-drop-loot
-./gradlew check build runClient
+./gradlew build runClient
 # On Windows, use "gradlew.bat" instead of "gradlew"
 ```
 
-[CurseForge]: https://minecraft.curseforge.com/projects/always-drop-loot
+[curseforge]: https://minecraft.curseforge.com/projects/always-drop-loot

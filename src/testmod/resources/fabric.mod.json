@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "id": "always-drop-loot-testmod",
+  "version": "testmod",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-gametest": [
+      "me.sargunvohra.mcmods.alwaysdroploot.test.AlwaysDropXpTests",
+      "me.sargunvohra.mcmods.alwaysdroploot.test.LootDropModeTests"
+    ]
+  }
+}
