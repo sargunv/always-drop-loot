@@ -3,11 +3,11 @@ links = [];
 if ('{{curseForgeId}}' && '{{curseForgeSlug}}') {
   links.push(
     link(
-      image('', 'https://cf.way2muchnoise.eu/{{curseForgeId}}.svg'),
+      image('CurseForge', 'https://cf.way2muchnoise.eu/{{curseForgeId}}.svg'),
       'https://www.curseforge.com/minecraft/mc-mods/{{curseForgeSlug}}'
     ),
     link(
-      image('', 'https://cf.way2muchnoise.eu/versions/{{curseForgeId}}.svg'),
+      image('CurseForge', 'https://cf.way2muchnoise.eu/versions/{{curseForgeId}}.svg'),
       'https://www.curseforge.com/minecraft/mc-mods/{{curseForgeSlug}}'
     )
   );
@@ -15,7 +15,7 @@ if ('{{curseForgeId}}' && '{{curseForgeSlug}}') {
 if ('{{modrinthId}}' && '{{modrinthSlug}}') {
   links.push(
     link(
-      image('', 'https://img.shields.io/modrinth/dt/{{modrinthId}}?label=Modrinth'),
+      image('Modrinth', 'https://img.shields.io/modrinth/dt/{{modrinthId}}?label=Modrinth'),
       'https://modrinth.com/mod/{{modrinthSlug}}'
     )
   );
@@ -23,7 +23,7 @@ if ('{{modrinthId}}' && '{{modrinthSlug}}') {
 if ('{{githubRepo}}') {
   links.push(
     link(
-      image('', 'https://img.shields.io/github/workflow/status/{{githubRepo}}/Build?logo=github'),
+      image('Github', 'https://img.shields.io/github/workflow/status/{{githubRepo}}/Build?logo=github'),
       'https://github.com/{{githubRepo}}/actions/workflows/build.yml'
     )
   )
@@ -31,9 +31,9 @@ if ('{{githubRepo}}') {
 output = links.join('\n');
 -->
 
-[![](https://cf.way2muchnoise.eu/317548.svg)](https://www.curseforge.com/minecraft/mc-mods/always-drop-loot)
-[![](https://cf.way2muchnoise.eu/versions/317548.svg)](https://www.curseforge.com/minecraft/mc-mods/always-drop-loot)
-[![](https://img.shields.io/github/workflow/status/sargunv/always-drop-loot/Build?logo=github)](https://github.com/sargunv/always-drop-loot/actions/workflows/build.yml)
+[![CurseForge](https://cf.way2muchnoise.eu/317548.svg)](https://www.curseforge.com/minecraft/mc-mods/always-drop-loot)
+[![CurseForge](https://cf.way2muchnoise.eu/versions/317548.svg)](https://www.curseforge.com/minecraft/mc-mods/always-drop-loot)
+[![Github](https://img.shields.io/github/workflow/status/sargunv/always-drop-loot/Build?logo=github)](https://github.com/sargunv/always-drop-loot/actions/workflows/build.yml)
 
 <!---freshmark /shields -->
 
