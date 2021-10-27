@@ -23,7 +23,7 @@ if ('{{modrinthId}}' && '{{modrinthSlug}}') {
 if ('{{githubRepo}}') {
   links.push(
     link(
-      image('Github build status', 'https://img.shields.io/github/workflow/status/{{githubRepo}}/Build?logo=github'),
+      image('Github build status', 'https://github.com/{{githubRepo}}/actions/workflows/build.yml/badge.svg'),
       'https://github.com/{{githubRepo}}/actions/workflows/build.yml'
     )
   )
@@ -33,7 +33,7 @@ output = links.join('\n');
 
 [![CurseForge](https://cf.way2muchnoise.eu/317548.svg)](https://www.curseforge.com/minecraft/mc-mods/always-drop-loot)
 [![CurseForge](https://cf.way2muchnoise.eu/versions/317548.svg)](https://www.curseforge.com/minecraft/mc-mods/always-drop-loot)
-[![Github build status](https://img.shields.io/github/workflow/status/sargunv/always-drop-loot/Build?logo=github)](https://github.com/sargunv/always-drop-loot/actions/workflows/build.yml)
+[![Github build status](https://github.com/sargunv/always-drop-loot/actions/workflows/build.yml/badge.svg)](https://github.com/sargunv/always-drop-loot/actions/workflows/build.yml)
 
 <!---freshmark /shields -->
 
