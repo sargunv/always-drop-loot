@@ -23,7 +23,7 @@ if ('{{modrinthId}}' && '{{modrinthSlug}}') {
 if ('{{githubRepo}}') {
   links.push(
     link(
-      image('Github', 'https://img.shields.io/github/workflow/status/{{githubRepo}}/Build?logo=github'),
+      image('Github build status', 'https://img.shields.io/github/workflow/status/{{githubRepo}}/Build?logo=github'),
       'https://github.com/{{githubRepo}}/actions/workflows/build.yml'
     )
   )
