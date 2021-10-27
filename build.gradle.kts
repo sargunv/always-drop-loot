@@ -129,10 +129,11 @@ spotless {
   freshmark {
     target("**/*.md")
     propertiesFile("gradle.properties")
+    prettier()
   }
 
   format("misc") {
-    target("**/*.json", "**/*.md", "**/*.yml")
+    target("**/*.json", "**/*.yml")
     prettier()
   }
 }
@@ -148,4 +149,4 @@ changelog {
       })
 }
 
-tasks.getByName("patchChangelog").finalizedBy(tasks.getByName("spotlessMiscApply"))
+tasks.getByName("patchChangelog").finalizedBy(tasks.getByName("spotlessFreshmarkApply"))
