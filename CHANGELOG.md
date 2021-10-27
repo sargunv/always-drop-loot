@@ -6,8 +6,8 @@
 
 - Updated to MC 1.17.1
 - Replaced config loading with gamerules
-- Internal: switched to Patchwork mappings
-- Internal: configured gametest framework and added tests for all modes
+- Internal: Switched to Patchwork mappings
+- Internal: Configured gametest framework and added tests for all modes
 
 ## 4.0.0
 
