@@ -6,9 +6,9 @@
   "description": "Make mobs always drop exp and loot, regardless of cause of death.",
   "authors": ["sargunv"],
   "contact": {
-    "homepage": "https://minecraft.curseforge.com/projects/always-drop-loot",
-    "sources": "https://github.com/sargunv/always-drop-loot",
-    "issues": "https://github.com/sargunv/always-drop-loot/issues"
+    "homepage": "https://minecraft.curseforge.com/projects/${curseForgeSlug}",
+    "sources": "https://github.com/${githubRepo}",
+    "issues": "https://github.com/${githubRepo}/issues"
   },
   "license": "Apache-2.0",
   "icon": "assets/always-drop-loot/icon.png",

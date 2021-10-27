@@ -1,18 +1,42 @@
+<!---freshmark shields
+links = [];
+if ('{{curseForgeId}}' && '{{curseForgeSlug}}') {
+  links.push(
+    link(
+      image('', 'https://cf.way2muchnoise.eu/{{curseForgeId}}.svg'),
+      'https://www.curseforge.com/minecraft/mc-mods/{{curseForgeSlug}}'
+    ),
+    link(
+      image('', 'https://cf.way2muchnoise.eu/versions/{{curseForgeId}}.svg'),
+      'https://www.curseforge.com/minecraft/mc-mods/{{curseForgeSlug}}'
+    )
+  );
+}
+if ('{{modrinthId}}' && '{{modrinthSlug}}') {
+  links.push(
+    link(
+      image('', 'https://img.shields.io/modrinth/dt/{{modrinthId}}?label=Modrinth'),
+      'https://modrinth.com/mod/{{modrinthSlug}}'
+    )
+  );
+}
+if ('{{githubRepo}}') {
+  links.push(
+    link(
+      image('', 'https://img.shields.io/github/workflow/status/{{githubRepo}}/Build?logo=github'),
+      'https://github.com/{{githubRepo}}/actions/workflows/build.yml'
+    )
+  )
+}
+output = links.join('\n');
+-->
+
+[![](https://cf.way2muchnoise.eu/317548.svg)](https://www.curseforge.com/minecraft/mc-mods/always-drop-loot)
+[![](https://cf.way2muchnoise.eu/versions/317548.svg)](https://www.curseforge.com/minecraft/mc-mods/always-drop-loot)
+[![](https://img.shields.io/github/workflow/status/sargunv/always-drop-loot/Build?logo=github)](https://github.com/sargunv/always-drop-loot/actions/workflows/build.yml)
+
+<!---freshmark /shields -->
+
 # Always Drop Loot
 
 Make mobs always drop exp and loot, regardless of cause of death.
-
-## Information
-
-Check out this mod on [CurseForge][].
-
-## Building from source
-
-```bash
-git clone https://github.com/sargunv/always-drop-loot.git
-cd always-drop-loot
-./gradlew build runClient
-# On Windows, use "gradlew.bat" instead of "gradlew"
-```
-
-[curseforge]: https://minecraft.curseforge.com/projects/always-drop-loot

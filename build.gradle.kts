@@ -15,12 +15,16 @@ plugins {
   id("com.github.jmongard.git-semver-plugin") version "0.4.2"
 }
 
+buildscript { dependencies { classpath("org.openjdk.nashorn:nashorn-core:15.3") } }
+
 group = mavenGroup
-version = if (semver.version.contains('+')) {
-  "${semver.version}.mc$minecraftVersion"
-} else {
-  "${semver.version}+mc$minecraftVersion"
-}
+
+version =
+    if (semver.version.contains('+')) {
+      "${semver.version}.mc$minecraftVersion"
+    } else {
+      "${semver.version}+mc$minecraftVersion"
+    }
 
 sourceSets {
   create("testmod") {
@@ -90,13 +94,7 @@ tasks.getByName<ProcessResources>("processResources") {
   inputs.property("fabricVersion", fabricVersion)
 
   filesMatching("fabric.mod.json") {
-    expand(
-        mapOf(
-            "modVersion" to project.version,
-            "minecraftVersion" to minecraftVersion,
-            "loaderVersion" to loaderVersion,
-            "fabricVersion" to fabricVersion,
-        ))
+    expand(project.properties + mapOf("modVersion" to "${project.version}"))
   }
 }
 
@@ -116,9 +114,9 @@ publishing {
   }
 }
 
-//if (!semver.semVersion.isSnapshot) {
+// if (!semver.semVersion.isSnapshot) {
 //  TODO("release configs")
-//}
+// }
 
 spotless {
   java {
@@ -128,9 +126,14 @@ spotless {
 
   kotlinGradle { ktfmt() }
 
-  format("prettier") {
-    target("**/*.json", "**/*.yml", "**/*.md")
-    prettier("2.4.1")
+  freshmark {
+    target("**/*.md")
+    propertiesFile("gradle.properties")
+  }
+
+  format("misc") {
+    target("**/*.json", "**/*.md", "**/*.yml")
+    prettier()
   }
 }
 
@@ -138,9 +141,11 @@ changelog {
   version.set(semver.version)
   groups.set(listOf("Changes"))
   unreleasedTerm.set("Current")
-  header.set(provider {
-    if (!semver.semVersion.isSnapshot)
-      version.get()
-    else throw Exception("Can't patch changelog of snapshot version")
-  })
+  header.set(
+      provider {
+        if (!semver.semVersion.isSnapshot) version.get()
+        else throw Exception("Can't patch changelog of snapshot version")
+      })
 }
+
+tasks.getByName("patchChangelog").finalizedBy(tasks.getByName("spotlessMiscApply"))
