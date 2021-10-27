@@ -1,5 +1,3 @@
-import com.palantir.gradle.gitversion.VersionDetails
-
 val minecraftVersion: String by project
 val parchmentVersion: String by project
 val loaderVersion: String by project
@@ -12,16 +10,17 @@ plugins {
   java
   `maven-publish`
   id("fabric-loom") version "0.10.42"
-  id("com.palantir.git-version") version "0.12.3"
   id("com.diffplug.spotless") version "5.17.0"
   id("org.jetbrains.changelog") version "1.3.1"
+  id("com.github.jmongard.git-semver-plugin") version "0.4.2"
 }
 
-val gitVersion: groovy.lang.Closure<Any> by extra
-val versionDetails: groovy.lang.Closure<VersionDetails> by extra
-
-version = "${gitVersion()}+mc$minecraftVersion"
 group = mavenGroup
+version = if (semver.version.contains('+')) {
+  "${semver.version}.mc$minecraftVersion"
+} else {
+  "${semver.version}+mc$minecraftVersion"
+}
 
 sourceSets {
   create("testmod") {
@@ -117,10 +116,9 @@ publishing {
   }
 }
 
-if (versionDetails().isCleanTag) {
-  // insert release configs here
-  println("clean tag (todo)")
-}
+//if (!semver.semVersion.isSnapshot) {
+//  TODO("release configs")
+//}
 
 spotless {
   java {
@@ -137,8 +135,12 @@ spotless {
 }
 
 changelog {
-  version.set("${gitVersion()}")
+  version.set(semver.version)
   groups.set(listOf("Changes"))
   unreleasedTerm.set("Current")
-  header.set(version.get())
+  header.set(provider {
+    if (!semver.semVersion.isSnapshot)
+      version.get()
+    else throw Exception("Can't patch changelog of snapshot version")
+  })
 }
