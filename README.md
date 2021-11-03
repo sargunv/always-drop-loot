@@ -33,6 +33,7 @@ output = links.join('\n');
 
 [![CurseForge](https://cf.way2muchnoise.eu/317548.svg)](https://www.curseforge.com/minecraft/mc-mods/always-drop-loot)
 [![CurseForge](https://cf.way2muchnoise.eu/versions/317548.svg)](https://www.curseforge.com/minecraft/mc-mods/always-drop-loot)
+[![Modrinth](https://img.shields.io/modrinth/dt/UZD6Ttu3?label=Modrinth)](https://modrinth.com/mod/always-drop-loot)
 [![Github build status](https://github.com/sargunv/always-drop-loot/actions/workflows/build.yml/badge.svg)](https://github.com/sargunv/always-drop-loot/actions/workflows/build.yml)
 
 <!---freshmark /shields -->

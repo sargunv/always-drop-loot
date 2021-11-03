@@ -2,7 +2,6 @@ import com.matthewprenger.cursegradle.CurseProject
 import com.matthewprenger.cursegradle.CurseRelation
 import com.matthewprenger.cursegradle.Options
 import com.modrinth.minotaur.TaskModrinthUpload
-import com.modrinth.minotaur.request.Dependency.DependencyType.REQUIRED
 import net.fabricmc.loom.task.RemapJarTask
 
 val minecraftVersion: String by project
@@ -146,7 +145,9 @@ changelog {
         else throw Exception("Can't patch changelog of snapshot version")
       })
 }
+
 val changelogText = changelog.getLatest().toText()
+
 tasks.getByName("patchChangelog").finalizedBy(tasks.getByName("spotlessFreshmarkApply"))
 
 publishing {
@@ -166,34 +167,35 @@ if (project.hasProperty("curseforge_token")) {
     apiKey = project.property("curseforge_token")
 
     project(
-      closureOf<CurseProject> {
-        id = curseForgeId
-        changelog = changelogText
-        releaseType = "release"
-        addGameVersion(minecraftVersion)
-        addGameVersion("Fabric")
-        relations(closureOf<CurseRelation> { requiredDependency("fabric-api") })
-        mainArtifact(remapJar.archiveFile)
-        afterEvaluate { uploadTask.dependsOn(remapJar) }
-      })
+        closureOf<CurseProject> {
+          id = curseForgeId
+          changelog = changelogText
+          releaseType = "release"
+          addGameVersion(minecraftVersion)
+          addGameVersion("Fabric")
+          relations(closureOf<CurseRelation> { requiredDependency("fabric-api") })
+          mainArtifact(remapJar.archiveFile)
+          afterEvaluate { uploadTask.dependsOn(remapJar) }
+        })
 
     options(
-      closureOf<Options> {
-        forgeGradleIntegration = false
-        detectNewerJava = true
-        debug = semver.semVersion.isSnapshot
-      })
+        closureOf<Options> {
+          forgeGradleIntegration = false
+          detectNewerJava = true
+          debug = semver.semVersion.isSnapshot
+        })
   }
 }
 
 if (project.hasProperty("modrinth_token")) {
   task("modrinth", TaskModrinthUpload::class) {
-    token = "${project.property("modrinth_token")}"
-    projectId = modrinthId
-    versionNumber = "${project.version}"
-    changelog = changelogText
-    uploadFile = remapJar
-    addGameVersion(minecraftVersion)
-    addLoader("fabric")
-  }.dependsOn(remapJar)
+        token = "${project.property("modrinth_token")}"
+        projectId = modrinthId
+        versionNumber = "${project.version}"
+        changelog = changelogText
+        uploadFile = remapJar
+        addGameVersion(minecraftVersion)
+        addLoader("fabric")
+      }
+      .dependsOn(remapJar)
 }
