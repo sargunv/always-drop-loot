@@ -92,7 +92,8 @@ dependencies {
 base { archivesName.set(modId) }
 
 java {
-  toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+  sourceCompatibility = JavaVersion.VERSION_16
+  targetCompatibility = JavaVersion.VERSION_16
   withSourcesJar()
 }
 
