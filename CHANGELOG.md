@@ -10,7 +10,7 @@
 
 - Updated to MC 1.17.1
 - Replaced config loading with gamerules
-- Internal: Switched to Patchwork mappings
+- Internal: Switched to Parchment mappings
 - Internal: Configured gametest framework and added tests for all modes
 
 ## 4.0.0
