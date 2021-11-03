@@ -15,7 +15,12 @@ jobs:
           java-version: 16
           distribution: adopt
           cache: gradle
-      - run: |
+      - name: Git config
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+      - name: Set up gradle.properties
+        run: |
           mkdir -p ~/.gradle
           cat <<EOF > ~/.gradle/gradle.properties
           curseforge_token=${{ secrets.CURSEFORGE_TOKEN }}
@@ -24,7 +29,8 @@ jobs:
       - run: ./gradlew build
       - run: ./gradlew releaseVersion
       - run: ./gradlew modrinth curseforge
-      - run: |
+      - name: Update changelog
+        run: |
           ./gradlew patchChangelog
           git add CHANGELOG.md
           git commit -m 'chore: update changelog'
