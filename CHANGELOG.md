@@ -4,6 +4,10 @@
 
 ### Changes
 
+## 5.0.0
+
+### Changes
+
 - Updated to MC 1.17.1
 - Replaced config loading with gamerules
 - Internal: Switched to Patchwork mappings
