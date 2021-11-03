@@ -12,11 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # fetch full history
       - uses: actions/setup-java@v2
         with:
-          java-version: "16"
-          distribution: "adopt"
+          java-version: 16
+          distribution: adopt
           cache: gradle
       - run: ./gradlew build
       - uses: actions/upload-artifact@v2.2.4

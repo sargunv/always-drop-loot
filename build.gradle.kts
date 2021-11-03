@@ -1,9 +1,18 @@
+import com.matthewprenger.cursegradle.CurseProject
+import com.matthewprenger.cursegradle.CurseRelation
+import com.matthewprenger.cursegradle.Options
+import com.modrinth.minotaur.TaskModrinthUpload
+import com.modrinth.minotaur.request.Dependency.DependencyType.REQUIRED
+import net.fabricmc.loom.task.RemapJarTask
+
 val minecraftVersion: String by project
 val parchmentVersion: String by project
 val loaderVersion: String by project
 val modId: String by project
 val mavenGroup: String by project
 val fabricVersion: String by project
+val curseForgeId: String by project
+val modrinthId: String by project
 val modMenuVersion: String by project
 
 plugins {
@@ -13,6 +22,8 @@ plugins {
   id("com.diffplug.spotless") version "5.17.0"
   id("org.jetbrains.changelog") version "1.3.1"
   id("com.github.jmongard.git-semver-plugin") version "0.4.2"
+  id("com.matthewprenger.cursegradle") version "1.4.0"
+  id("com.modrinth.minotaur") version "1.2.1"
 }
 
 buildscript { dependencies { classpath("org.openjdk.nashorn:nashorn-core:15.3") } }
@@ -72,6 +83,7 @@ dependencies {
 
   // remember to update the dependency list in fabric.mod.json
   // and the expansions in "processResources" below
+  // and the curseforge block
   modImplementation("net.fabricmc:fabric-loader:$loaderVersion")
   modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
 
@@ -102,21 +114,7 @@ val javaCompile = tasks.withType<JavaCompile> { options.encoding = "UTF-8" }
 
 val jar = tasks.getByName<Jar>("jar") { from("LICENSE") }
 
-publishing {
-  publications {
-    create<MavenPublication>("mavenJava") {
-      artifact("remapJar") { builtBy(tasks.getByName("remapJar")) }
-      artifact("sourcesJar") { builtBy(tasks.getByName("remapSourcesJar")) }
-    }
-  }
-  repositories {
-    // Add repositories to publish to here.
-  }
-}
-
-// if (!semver.semVersion.isSnapshot) {
-//  TODO("release configs")
-// }
+val remapJar = tasks.getByName<RemapJarTask>("remapJar")
 
 spotless {
   java {
@@ -148,5 +146,54 @@ changelog {
         else throw Exception("Can't patch changelog of snapshot version")
       })
 }
-
+val changelogText = changelog.getLatest().toText()
 tasks.getByName("patchChangelog").finalizedBy(tasks.getByName("spotlessFreshmarkApply"))
+
+publishing {
+  publications {
+    create<MavenPublication>("mavenJava") {
+      artifact("remapJar") { builtBy(tasks.getByName("remapJar")) }
+      artifact("sourcesJar") { builtBy(tasks.getByName("remapSourcesJar")) }
+    }
+  }
+  repositories {
+    // Add repositories to publish to here.
+  }
+}
+
+if (project.hasProperty("curseforge_token")) {
+  curseforge {
+    apiKey = project.property("curseforge_token")
+
+    project(
+      closureOf<CurseProject> {
+        id = curseForgeId
+        changelog = changelogText
+        releaseType = "release"
+        addGameVersion(minecraftVersion)
+        addGameVersion("Fabric")
+        relations(closureOf<CurseRelation> { requiredDependency("fabric-api") })
+        mainArtifact(remapJar.archiveFile)
+        afterEvaluate { uploadTask.dependsOn(remapJar) }
+      })
+
+    options(
+      closureOf<Options> {
+        forgeGradleIntegration = false
+        detectNewerJava = true
+        debug = semver.semVersion.isSnapshot
+      })
+  }
+}
+
+if (project.hasProperty("modrinth_token")) {
+  task("modrinth", TaskModrinthUpload::class) {
+    token = "${project.property("modrinth_token")}"
+    projectId = modrinthId
+    versionNumber = "${project.version}"
+    changelog = changelogText
+    uploadFile = remapJar
+    addGameVersion(minecraftVersion)
+    addLoader("fabric")
+  }.dependsOn(remapJar)
+}

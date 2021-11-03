@@ -1,0 +1,31 @@
+name: Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # fetch full history
+      - uses: actions/setup-java@v2
+        with:
+          java-version: 16
+          distribution: adopt
+          cache: gradle
+      - run: |
+          mkdir -p ~/.gradle
+          cat <<EOF > ~/.gradle/gradle.properties
+          curseforge_token=${{ secrets.CURSEFORGE_TOKEN }}
+          modrinth_token=${{ secrets.MODRINTH_TOKEN }}
+          EOF
+      - run: ./gradlew build
+      - run: ./gradlew releaseVersion
+      - run: ./gradlew modrinth curseforge
+      - run: |
+          ./gradlew patchChangelog
+          git add CHANGELOG.md
+          git commit -m 'chore: update changelog'
+      - run: git push && git push --tags
