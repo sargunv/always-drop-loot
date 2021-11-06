@@ -4,6 +4,10 @@
 
 ### Changes
 
+## 5.1.0
+
+### Changes
+
 - Added `passiveXpModifier` gamerule to modify the passive XP drop rate when `alwaysDropXp` is enabled.
 
 ## 5.0.0
