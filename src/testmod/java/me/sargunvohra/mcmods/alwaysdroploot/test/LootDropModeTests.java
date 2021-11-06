@@ -1,6 +1,5 @@
 package me.sargunvohra.mcmods.alwaysdroploot.test;
 
-import me.sargunvohra.mcmods.alwaysdroploot.AlwaysDropLoot;
 import me.sargunvohra.mcmods.alwaysdroploot.LootDropMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
@@ -20,11 +19,7 @@ public class LootDropModeTests {
     boolean asPlayer,
     boolean expectDrop
   ) {
-    helper
-      .getLevel()
-      .getGameRules()
-      .getRule(AlwaysDropLoot.LOOT_DROP_MODE)
-      .set(mode, helper.getLevel().getServer());
+    TestUtil.runCommand(helper, "gamerule always-drop-loot:lootDropMode " + mode);
     var entity = helper.spawn(EntityType.BLAZE, 1, 2, 1);
     if (asPlayer) {
       entity.hurt(DamageSource.playerAttack(helper.makeMockPlayer()), 1000f);

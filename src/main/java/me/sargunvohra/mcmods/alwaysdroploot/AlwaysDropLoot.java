@@ -3,6 +3,7 @@ package me.sargunvohra.mcmods.alwaysdroploot;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
+import net.fabricmc.fabric.api.gamerule.v1.rule.DoubleRule;
 import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
 import net.minecraft.world.level.GameRules;
 
@@ -12,6 +13,12 @@ public class AlwaysDropLoot implements ModInitializer {
     "always-drop-loot:alwaysDropXp",
     GameRules.Category.DROPS,
     GameRuleFactory.createBooleanRule(true)
+  );
+
+  public static final GameRules.Key<DoubleRule> PASSIVE_XP_MODIFIER = GameRuleRegistry.register(
+    "always-drop-loot:passiveXpModifier",
+    GameRules.Category.DROPS,
+    GameRuleFactory.createDoubleRule(1.0)
   );
 
   public static final GameRules.Key<EnumRule<LootDropMode>> LOOT_DROP_MODE = GameRuleRegistry.register(

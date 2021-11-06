@@ -1,6 +1,5 @@
 package me.sargunvohra.mcmods.alwaysdroploot.test;
 
-import me.sargunvohra.mcmods.alwaysdroploot.AlwaysDropLoot;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.entity.EntityType;
@@ -15,11 +14,8 @@ public class AlwaysDropXpTests {
     boolean enabled,
     boolean expectPresent
   ) {
-    helper
-      .getLevel()
-      .getGameRules()
-      .getRule(AlwaysDropLoot.ALWAYS_DROP_XP)
-      .set(enabled, helper.getLevel().getServer());
+    TestUtil.runCommand(helper, "gamerule always-drop-loot:alwaysDropXp " + enabled);
+    TestUtil.runCommand(helper, "gamerule always-drop-loot:passiveXpModifier 1.0");
     helper.spawn(EntityType.CREEPER, 1, 2, 1).kill();
     if (expectPresent) {
       helper.succeedIf(() ->
