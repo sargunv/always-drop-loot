@@ -14,8 +14,14 @@ public class AlwaysDropXpTests {
     boolean enabled,
     boolean expectPresent
   ) {
-    TestUtil.runCommand(helper, "gamerule always-drop-loot:alwaysDropXp " + enabled);
-    TestUtil.runCommand(helper, "gamerule always-drop-loot:passiveXpModifier 1.0");
+    TestUtil.runCommand(
+      helper,
+      "gamerule always-drop-loot:alwaysDropXp " + enabled
+    );
+    TestUtil.runCommand(
+      helper,
+      "gamerule always-drop-loot:passiveXpModifier 1.0"
+    );
     helper.spawn(EntityType.CREEPER, 1, 2, 1).kill();
     if (expectPresent) {
       helper.succeedIf(() ->

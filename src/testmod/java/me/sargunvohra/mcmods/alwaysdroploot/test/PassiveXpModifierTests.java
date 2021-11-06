@@ -20,16 +20,26 @@ public class PassiveXpModifierTests {
     boolean asPlayer,
     int expectedPoints
   ) {
-    TestUtil.runCommand(helper, "gamerule always-drop-loot:alwaysDropXp " + alwaysDropXp);
-    TestUtil.runCommand(helper, "gamerule always-drop-loot:passiveXpModifier " + passiveXpModifier);
+    TestUtil.runCommand(
+      helper,
+      "gamerule always-drop-loot:alwaysDropXp " + alwaysDropXp
+    );
+    TestUtil.runCommand(
+      helper,
+      "gamerule always-drop-loot:passiveXpModifier " + passiveXpModifier
+    );
     var entity = helper.spawn(EntityType.CREEPER, 1, 2, 1);
     if (asPlayer) {
       entity.hurt(DamageSource.playerAttack(helper.makeMockPlayer()), 1000f);
     } else {
       entity.kill();
     }
-    var points = helper.getLevel()
-      .getEntitiesOfClass(ExperienceOrb.class, AABB.unitCubeFromLowerCorner(helper.absoluteVec(new Vec3(1, 2, 1))))
+    var points = helper
+      .getLevel()
+      .getEntitiesOfClass(
+        ExperienceOrb.class,
+        AABB.unitCubeFromLowerCorner(helper.absoluteVec(new Vec3(1, 2, 1)))
+      )
       .stream()
       .map(ExperienceOrb::getValue)
       .reduce(0, Integer::sum);

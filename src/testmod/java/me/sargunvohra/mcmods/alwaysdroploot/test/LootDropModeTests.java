@@ -19,7 +19,10 @@ public class LootDropModeTests {
     boolean asPlayer,
     boolean expectDrop
   ) {
-    TestUtil.runCommand(helper, "gamerule always-drop-loot:lootDropMode " + mode);
+    TestUtil.runCommand(
+      helper,
+      "gamerule always-drop-loot:lootDropMode " + mode
+    );
     var entity = helper.spawn(EntityType.BLAZE, 1, 2, 1);
     if (asPlayer) {
       entity.hurt(DamageSource.playerAttack(helper.makeMockPlayer()), 1000f);
